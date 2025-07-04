@@ -5,13 +5,14 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 const RestaurantCard=()=>{
     return(
         <Card className='w-[18rem]'>
-            <div className={`${true? 'cursor-pointer':'cusror-not-allowed'} relative`}>
-                <img className='w-full h-[10rem] rounded-t-md object-cover' src="https://images.pexels.com/photos/2290753/pexels-photo-2290753.jpeg" alt="" />
+            <div className={`${true? 'cursor-pointer':'cusor-not-allowed'} relative`}>
                 <Chip size='small' 
                     className='absolute top2-left-2' 
                     color={true?"success":"error"} 
                     label={true?"open":"closed"}
                 />
+                <img className='w-full h-[10rem] rounded-t-md object-cover' src="https://images.pexels.com/photos/2290753/pexels-photo-2290753.jpeg" alt="" />
+                
             </div>
             <div className="p-4 textPart lg:flex w-full justify-between">
                 <div className='space-y-1'>

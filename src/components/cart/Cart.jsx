@@ -5,7 +5,7 @@ import AddressCard from './AddressCard';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { AddLocationAlt } from '@mui/icons-material';
 import * as Yup from "yup";
-import { ErrorMessage, Field, Formik } from 'formik';
+import { ErrorMessage, Field, Form, Formik } from 'formik';
 const items=[1,1];
 const initialValues={
     streetAddress:"",
@@ -21,7 +21,7 @@ const validationSchema=Yup.object().shape({
 
 
 })
-const style = {
+export const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -44,8 +44,8 @@ const Cart=()=>{
     const handleClose = () =>{
          setOpen(false);
     }
-    const handleSubmit=()=>{
-
+    const handleSubmit=(val)=>{
+        console.log("value",val);
     }
     return(
         <div>
@@ -119,10 +119,11 @@ const Cart=()=>{
                 <Formik
                     initialValues={initialValues}
                     validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
+                    onSubmit={(val)=>handleSubmit(val)}
                     >
+                    <Form>
                     <Grid container spacing={2}>
-                        <Grid item xs={6}>
+                        <Grid item xs={12}>
                             <Field
                                 as={TextField}
                                 name="streetAddress"
@@ -134,7 +135,7 @@ const Cart=()=>{
                                 {msg => <span className="text-red-600">{msg}</span>}
                             </ErrorMessage>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} lg={12} md={12}>
                             <Field
                                 as={TextField}
                                 name="city"
@@ -146,7 +147,7 @@ const Cart=()=>{
                                 {msg => <span className="text-red-600">{msg}</span>}
                             </ErrorMessage>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} lg={12} md={12}>
                             <Field
                                 as={TextField}
                                 name="pincode"
@@ -158,7 +159,7 @@ const Cart=()=>{
                                 {msg => <span className="text-red-600">{msg}</span>}
                             </ErrorMessage>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} lg={12} md={12}>
                             <Field
                                 as={TextField}
                                 name="state"
@@ -166,14 +167,15 @@ const Cart=()=>{
                                 fullWidth
                                 variant="outlined"
                             />
-                            <ErrorMessage name="state">
+                            <ErrorMessage name="state" md={12}>
                                 {msg => <span className="text-red-600">{msg}</span>}
                             </ErrorMessage>
                         </Grid>
-                        <Grid item xs={6}>
+                        <Grid item xs={12} lg={12} md={12}>
                             <Button variant='contained' type='submit' color='primary' fullWidth>Deliver Here</Button>
                         </Grid>
                     </Grid>
+                </Form>
                 </Formik>
 
                     

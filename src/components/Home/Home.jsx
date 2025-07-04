@@ -3,7 +3,7 @@ import "./Home.css";
 import { MultiItemCarousel } from "./MultiItemCarousel";
 import RestaurantCard from "../Restaurant/RestaurantCard";
 const restaurant=[1,1,1,1,1,1,1,1,1,1,1,1,1,1];
-export const Home=()=>{
+const Home=()=>{
     return(
         <div className='pb-10'>
             <section className="banner -z-50 relative flex flex-col justify-center items-center">
@@ -32,3 +32,4 @@ export const Home=()=>{
         </div>
     )
 }
+export default Home;
