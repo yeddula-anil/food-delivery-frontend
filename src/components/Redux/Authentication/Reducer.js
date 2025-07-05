@@ -10,7 +10,8 @@ import {
     REGISTER_REQUEST,
     REGISTER_SUCCESS,
     REGISTER_FAILURE,
-    LOGOUT
+    LOGOUT,
+    ADD_TO_FAVORITES_FAILURE
   } from "./ActionTypes";
   
   import { isPresentInFavorites } from "../../config/logic";
@@ -47,6 +48,7 @@ const authReducer = (state = initialState, action) => {
       case REGISTER_FAILURE:
       case LOGIN_FAILURE:
       case GET_USER_FAILURE:
+      case ADD_TO_FAVORITES_FAILURE:
         return {
           ...state,
           isLoading: false,
@@ -68,7 +70,9 @@ const authReducer = (state = initialState, action) => {
           ...state,
           isLoading: false,
           error: null,
-          favorites: isPresentInFavorites(state.favorites, action.payload)
+          favorites: isPresentInFavorites(state.favorites, action.payload)?
+          state.favorites.filter((item)=>item.id!==action.payload.id)
+          :[action.payload,...state.favorites]
         };
   
       case LOGOUT:

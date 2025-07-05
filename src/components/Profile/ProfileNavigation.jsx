@@ -8,6 +8,7 @@ import EventIcon from '@mui/icons-material/Event';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider, Drawer, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 const menu=[
     {
         title:"orders",
@@ -41,8 +42,12 @@ const menu=[
 const ProfileNavigation = ({open,handleClose}) => {
     const isSmallScreen=useMediaQuery('(max-width:900)')
     const navigate=useNavigate();
+    const dispatch=useDispatch()
     const handleNavigate=(item)=>{
-        navigate(`/my-profile/${item.title.toLowerCase()}`)
+        if(item.title==='logout')
+            dispatch(logout())
+        else
+            navigate(`/my-profile/${item.title.toLowerCase()}`)
     }
     
   return (

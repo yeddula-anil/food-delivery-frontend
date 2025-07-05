@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_TO_FAVORITES_REQUEST, GET_USER_REQUEST, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST, REGISTER_SUCCESS,LOGOUT} from "./ActionTypes";
+import { ADD_TO_FAVORITES_REQUEST, GET_USER_REQUEST, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST, REGISTER_SUCCESS,LOGOUT, REGISTER_FAILURE, LOGIN_FAILURE, GET_USER_FAILURE, GET_USER_SUCCESS} from "./ActionTypes";
 import { API_URL } from "../../config/api";
 import { display } from "@mui/system";
 export const registerUser=(reqData)=>async(dispatch)=>{
@@ -17,6 +17,7 @@ export const registerUser=(reqData)=>async(dispatch)=>{
         console.log("register success",data)
     }
     catch(error){
+        dispatch({type:REGISTER_FAILURE,payload:error})
         console.log(error)
     }
 }
@@ -36,6 +37,7 @@ export const loginUser=(reqData)=>async(dispatch)=>{
         console.log("login success",data)
     }
     catch(error){
+        dispatch({type:LOGIN_FAILURE,payload:error})
         console.log(error)
     }
 }
@@ -43,15 +45,16 @@ export const loginUser=(reqData)=>async(dispatch)=>{
 export const getUser=(jwt)=>async(dipatch)=>{
     dispatch({type:GET_USER_REQUEST})
     try{
-        const {data}=await api.post(/auth/signin,{
+        const {data}=await api.post('/api/users/profile',{
             headers:{
                 Authorization:`Bearer ${jwt}`
             }
         })
-        dispatch({type:LOGIN_SUCCESS,payload:data})
+        dispatch({type:GET_USER_SUCCESS,payload:data})
         console.log("userprofile",data);
     }
     catch(error){
+        dispatch({type:GET_USER_FAILURE,payload:error})
         console.log("error",error)
     }
 }
@@ -74,9 +77,10 @@ export const addToFavorite = (jwt, restaurantId) => async (dispatch) => {
       dispatch({ type: ADD_TO_FAVORITES_SUCCESS, payload: data });
       console.log("added to favorites", data);
     } catch (error) {
-      console.log("error", error);
-      // Optional: handle error
-      // dispatch({ type: ADD_TO_FAVORITES_FAILURE, payload: error.message });
+         dispatch({ type: ADD_TO_FAVORITES_FAILURE, payload: error});
+         console.log("error", error);
+      
+      
     }
 };
 
@@ -84,7 +88,7 @@ export const addToFavorite = (jwt, restaurantId) => async (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
     // Remove token from localStorage
-    localStorage.removeItem("jwt");
+    localStorage.clear();
   
     // Dispatch LOGOUT to reset Redux state
     dispatch({ type: LOGOUT });
