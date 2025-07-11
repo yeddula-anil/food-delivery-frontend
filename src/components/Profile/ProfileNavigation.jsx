@@ -9,6 +9,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { Divider, Drawer, useMediaQuery } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { logoutUser } from '../Redux/Authentication/Actions';
 const menu=[
     {
         title:"orders",
@@ -44,8 +45,10 @@ const ProfileNavigation = ({open,handleClose}) => {
     const navigate=useNavigate();
     const dispatch=useDispatch()
     const handleNavigate=(item)=>{
-        if(item.title==='logout')
-            dispatch(logout())
+        if(item.title==='logout'){
+            dispatch(logoutUser())
+             navigate("/account/login");
+        }
         else
             navigate(`/my-profile/${item.title.toLowerCase()}`)
     }

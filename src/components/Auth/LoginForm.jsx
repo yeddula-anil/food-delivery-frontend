@@ -15,7 +15,7 @@ const LoginForm = () => {
     const navigate=useNavigate()
     const dispatch=useDispatch()
   const handleSubmit = (values) => {
-    dispatch(loginUser({userData:values,navigate}))
+    dispatch(loginUser({loginData:values,navigate}))
   };
  
 

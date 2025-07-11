@@ -29,10 +29,15 @@ export const Navbar=()=>{
                     </IconButton>
                 </div>
                 <div className=''>
-                    {auth.user?<Avatar onClick={handleAvatarClick} sx={{bgcolor:"white",color:"pink.A400"}}>{auth.user.fullName[0].toUpperCase()}</Avatar>:
-                    <IconButton onClick={()=>navigate("/account/login")}>
-                        <PersonIcon />
-                    </IconButton>}
+                    {auth.user && auth.user.fullname ?(
+                        <Avatar onClick={handleAvatarClick} sx={{ bgcolor: "white", color: "pink.A400" }}>
+                            {auth.user.fullname.charAt(0).toUpperCase()}
+                        </Avatar>
+                        ) : (
+                        <IconButton onClick={() => navigate("/account/login")}>
+                            <PersonIcon />
+                        </IconButton>
+                    )}
                 </div>
                 <div className=''>
                     <IconButton>

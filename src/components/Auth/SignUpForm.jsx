@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { registerUser } from '../Redux/Authentication/Actions';
   
   const initialValues = {
-    fullName: '',
+    fullname:'',
     email: '',
     password: '',
     role: '',
@@ -39,7 +39,7 @@ import { registerUser } from '../Redux/Authentication/Actions';
             <Form>
               <Field
                 as={TextField}
-                name='fullName'
+                name='fullname'
                 label='Full Name'
                 fullWidth
                 variant='outlined'
@@ -68,13 +68,14 @@ import { registerUser } from '../Redux/Authentication/Actions';
                   labelId='role-select-label'
                   id='role-select'
                   name='role'
-                  value={values.role}
+                  value={values.role || ''}
                   label='Role'
                   onChange={(e) => setFieldValue('role', e.target.value)}
                 >
                   <MenuItem value={'ROLE_CUSTOMER'}>Customer</MenuItem>
                   <MenuItem value={'ROLE_RESTAURANT_OWNER'}>Restaurant Owner</MenuItem>
                 </Select>
+
               </FormControl>
   
               <Button type='submit' variant='contained' fullWidth sx={{ mt: 2 }}>
