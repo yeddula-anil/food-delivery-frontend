@@ -28,7 +28,7 @@ export const Navbar=()=>{
                         <SearchIcon sx={{fontsSize:"1.5rem"}}/>
                     </IconButton>
                 </div>
-                <div className='cursor-pinter'>
+                <div className='cursor-pointer'>
                     {auth.user && auth.user.fullname ?(
                         <Avatar onClick={handleAvatarClick} sx={{ bgcolor: "white", color: "pink.A400" }}>
                             {auth.user.fullname.charAt(0).toUpperCase()}

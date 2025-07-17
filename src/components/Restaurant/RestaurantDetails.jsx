@@ -1,24 +1,64 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Divider, FormControl, FormControlLabel, Grid, Radio, RadioGroup, Typography } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import MenuCard from './MenuCard';
-const categories=["pizza","biryani","burger","chicken","rice"];
+import { useNavigate, useParams } from 'react-router-dom';
+import { getRestaurantById, getRestaurantCategories } from '../Redux/Restaurant/Action';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMenuItemByRestaurantId } from '../Redux/Menu/Action';
+// const categories=["pizza","biryani","burger","chicken","rice"];
 const foodTypes=[
     {label:"All",value:"all"}
     ,{label:"vegetarianOnly",value:"vegetarian"},
     {label:"non veg only",value:"non_veg"},
     {label:"Seasonal",value:"seasonal"}
 ];
-const menuCard=[1,1,1,1,1,1,1,1];
+
 const RestaurantDetails = () => {
     const [food_type,setfood_type]=useState("all");
-    const [food_category,setFoodCategory]=useState("");
+    const [foodCategory,setFoodCategory]=useState("");
+    const navigate=useNavigate();
+    const dispatch=useDispatch();
+    const jwt=localStorage.getItem("jwt")
+    const {auth} = useSelector(store=>store)
+    const {restaurant}=useSelector(store=>store.restaurant)
+    const {categories}=useSelector(store=>store.restaurant)
+    const {menuItems}=useSelector(store=>store.menu)
+   
+    
+    const {id}=useParams();
+    
+    useEffect(() => {
+        
+            dispatch(getRestaurantById({ jwt, restaurantId: id }));
+            dispatch(getRestaurantCategories({ jwt, restaurantId: id}))
+            dispatch(getMenuItemByRestaurantId({jwt,restaurantId:id,vegetarian:true,nonveg:false,seasonal:false,foodCategory:"Burgers"}))
+        
+    }, [dispatch, jwt, id]);
+    useEffect(()=>{
+        dispatch(getMenuItemByRestaurantId({jwt,restaurantId:id,
+            vegetarian:true,
+            nonveg:false,
+            seasonal:false,
+            foodCategory:foodCategory}))
+
+    },[foodCategory])
+    
+    console.log("restuarants by id",restaurant)
+    console.log("restaurant categories",categories)
+    console.log("menu items",menuItems)
+    
+
+  if (!restaurant) {
+    return <div className="text-center py-10 text-gray-500">Loading restaurant details...</div>;
+  }
+        
   return (
     <div className='px-5 lg:px-20' >
         <section>
-            <h3 className='text-gray-500 py-2 mt-10'>Home/India/ Indian Fast Fodd 3 </h3>
+            <h3 className='text-gray-500 py-2 mt-10'>Home/{restaurant.adress.country}/{restaurant.name}</h3>
 
             <div>
             <Grid item xs={12}>
@@ -66,15 +106,11 @@ const RestaurantDetails = () => {
                         </div>
             </div>
             <div className='pt-3 pb-5'>
-                <h1 className='text-4xl font-semibold'>Indian Fast Food</h1>
-                <p className='text-gray-500 mt-1'><span>Our chefs craft every dish with passion, using only the freshest ingredients to deliver a memorable dining experience. From traditional favorites to innovative creations, every bite tells a story.
-
-Enjoy a warm and inviting atmosphere perfect for family dinners, casual outings, or special occasions. Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.
-
-Come join us and discover why our guests keep coming back for more!"</span></p>
+                <h1 className='text-4xl font-semibold'>{restaurant.name}</h1>
+                <p className='text-gray-500 mt-1'><span>{restaurant.description}</span></p>
         <div className='space-y-3 mt-3'>
-            <p className='text-gray-500 flex items-center gap-3'><LocationOnIcon /><span>Kadapa,AndhraPradesh</span></p>
-            <p className='text-gray-500 flex items-center gap-3'><CalendarTodayIcon /><span>Mon-Sun: 9:00 AM - 9:00 PM (Today)</span></p>
+            <p className='text-gray-500 flex items-center gap-3'><LocationOnIcon /><span>{restaurant.adress?.city}</span></p>
+            <p className='text-gray-500 flex items-center gap-3'><CalendarTodayIcon /><span>{restaurant.openingHours} (Today)</span></p>
 
         </div>
 
@@ -115,9 +151,9 @@ Come join us and discover why our guests keep coming back for more!"</span></p>
                                     >
                                     {categories.map((item) => (
                                         <FormControlLabel
-                                        key={item}
-                                        value={item}
-                                        label={item}
+                                        key={item.id}
+                                        value={item.name}
+                                        label={item.name}
                                         control={<Radio />}
                                         />
                                     ))}
@@ -130,8 +166,8 @@ Come join us and discover why our guests keep coming back for more!"</span></p>
 
             </div>
             <div className='space-y-5 lg:w-[80%] lg:pl-10'>
-                {menuCard.map((item)=>(
-                    <MenuCard />
+                {menuItems.map((item)=>(
+                    <MenuCard item={item}/>
                 ))}
                 
             </div>

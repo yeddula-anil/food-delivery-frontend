@@ -13,9 +13,13 @@ function App() {
   const dispatch=useDispatch()
   const jwt=localStorage.getItem("jwt")
   const {auth}=useSelector(store=>store)
-  useEffect(()=>{
-      dispatch(getUser(auth.jwt || jwt))
-  },[auth.jwt])
+  useEffect(() => {
+      const token = localStorage.getItem("jwt");
+      if (token) {
+        dispatch(getUser(token));
+      }
+  }, [dispatch]);
+
 
   return (
     <>

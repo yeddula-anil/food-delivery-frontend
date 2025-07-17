@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ADD_TO_FAVORITES_REQUEST, GET_USER_REQUEST, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST, REGISTER_SUCCESS,LOGOUT, REGISTER_FAILURE, LOGIN_FAILURE, GET_USER_FAILURE, GET_USER_SUCCESS} from "./ActionTypes";
+import { ADD_TO_FAVORITES_REQUEST,ADD_TO_FAVORITES_SUCCESS,ADD_TO_FAVORITES_FAILURE, GET_USER_REQUEST, LOGIN_REQUEST, LOGIN_SUCCESS, REGISTER_REQUEST, REGISTER_SUCCESS,LOGOUT, REGISTER_FAILURE, LOGIN_FAILURE, GET_USER_FAILURE, GET_USER_SUCCESS} from "./ActionTypes";
 import { API_URL,api } from "../../config/api";
 
 import { display } from "@mui/system";
@@ -72,6 +72,7 @@ export const getUser = (jwtFromParam) => async (dispatch) => {
         Authorization: `Bearer ${jwt}`,
       },
     });
+    console.log(data)
 
     dispatch({ type: "GET_USER_SUCCESS", payload: data });
   } catch (error) {
@@ -84,11 +85,14 @@ export const getUser = (jwtFromParam) => async (dispatch) => {
 
 
 export const addToFavorite = (jwt, restaurantId) => async (dispatch) => {
+    
+    dispatch({ type: ADD_TO_FAVORITES_REQUEST });
+
     try {
-      dispatch({ type: ADD_TO_FAVORITES_REQUEST });
+      
   
       const { data } = await api.put(
-        `/api/restaurants/${restaurantId}/add-to-favorite`,
+        `/api/restaurant/${restaurantId}/add-to-favorites`,
         {}, // empty body for PUT
         {
           headers: {
@@ -98,7 +102,7 @@ export const addToFavorite = (jwt, restaurantId) => async (dispatch) => {
       );
   
       dispatch({ type: ADD_TO_FAVORITES_SUCCESS, payload: data });
-      console.log("added to favorites", data);
+      
     } catch (error) {
          dispatch({ type: ADD_TO_FAVORITES_FAILURE, payload: error});
          console.log("error", error);

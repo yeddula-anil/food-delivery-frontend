@@ -6,20 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { isPresentInFavorites } from '../config/logic';
 import { addToFavorite } from '../Redux/Authentication/Actions';
-const RestaurantCard=({res})=>{
+const FavoriteRestaurantCard=({res})=>{
     if(!res)
         return null
     const navigate=useNavigate();
     const dispatch=useDispatch();
     const jwt=localStorage.getItem("jwt")
-    const favorites = useSelector((state) => state.auth.favorites || []);
+
     
     const handleAddToFavorite=()=>{
-        dispatch(addToFavorite(jwt,res.id))
+        dispatch(addToFavorite(jwt,res.restaurantId))
     }
     const handleNavigateToRestaurant=()=>{
         // if(res.open){
-            navigate(`restaurant/${res.name}/${res.id}`)
+            navigate(`restaurant/${res.name}/${res.restaurantId}`)
         // }
     }
     return(
@@ -46,7 +46,7 @@ const RestaurantCard=({res})=>{
             </div>
             <div>
                 <IconButton onClick={handleAddToFavorite}>
-                    {isPresentInFavorites(favorites,res)?<FavoriteIcon />:<FavoriteBorderIcon />}
+                    {isPresentInFavorites(favorites,res.restaurantId)?<FavoriteIcon />:<FavoriteBorderIcon />}
                 </IconButton>
             </div>
            
@@ -55,4 +55,4 @@ const RestaurantCard=({res})=>{
         
     )
 }
-export default RestaurantCard;
+export default FavoriteRestaurantCard;

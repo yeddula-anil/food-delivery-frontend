@@ -14,7 +14,6 @@ import {
   CREATE_RESTAURANT_SUCCESS,
   CREATE_RESTAURANT_FAILURE,
   UPDATE_RESTAURANT_REQUEST,
-   UPDATE_RESTAURANT_REQUEST,
   UPDATE_RESTAURANT_SUCCESS,
   UPDATE_RESTAURANT_FAILURE,
    DELETE_RESTAURANT_REQUEST,
@@ -34,11 +33,11 @@ import {
   GET_RESTAURANT_CATEGORY_FAILURE,
 } from './ActionTypes';
 
-export const getAllRestaurantsAction = (token) => async (dispatch) => {
+export const getAllRestaurants = (token) => async (dispatch) => {
   dispatch({ type: GET_ALL_RESTAURANT_REQUEST });
 
   try {
-    const { data } = await api.get("/api/restaurants", {
+    const { data } = await api.get("/api/restaurant/all-restaurants", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -53,13 +52,13 @@ export const getAllRestaurantsAction = (token) => async (dispatch) => {
 };
 
 
-export const getRestaurantById = (reqdata) => async (dispatch) => {
+export const getRestaurantById = ({jwt,restaurantId}) => async (dispatch) => {
   dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
 
   try {
-    const { data } = await api.get(`/api/restaurant/${reqdata.RestaurantId}`, {
+    const { data } = await api.get(`/api/restaurant/${restaurantId}`, {
       headers: {
-        Authorization: `Bearer ${reqdata.jwt}`,
+        Authorization: `Bearer ${jwt}`,
       },
     });
 

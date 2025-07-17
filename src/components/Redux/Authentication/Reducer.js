@@ -60,20 +60,37 @@ const authReducer = (state = initialState, action) => {
         return {
           ...state,
           isLoading: false,
-          user: action.payload,
+          user: {
+                ...action.payload,
+                favorites: Array.isArray(action.payload.favorites) ? action.payload.favorites : []
+          },
           success: "User loaded",
-          error: null
-        };
-  
-      case ADD_TO_FAVORITES_SUCCESS:
-        return {
-          ...state,
-          isLoading: false,
           error: null,
-          favorites: isPresentInFavorites(state.favorites, action.payload)?
-          state.favorites.filter((item)=>item.id!==action.payload.id)
-          :[action.payload,...state.favorites]
+          favorites:  Array.isArray(action.payload.favorites) ? action.payload.favorites : []
         };
+
+        case ADD_TO_FAVORITES_SUCCESS: {
+          const alreadyExists = isPresentInFavorites(state.favorites, action.payload);
+
+          const updatedFavorites = alreadyExists
+          ? state.favorites.filter(
+              (item) => item.restaurantId !== action.payload.restaurantId
+            )
+          : [action.payload, ...state.favorites];
+
+          return {
+            ...state,
+            isLoading: false,
+            error: null,
+            favorites: updatedFavorites,
+            user: {
+              ...state.user,
+              favorites: updatedFavorites
+           },
+            success: alreadyExists ? "Removed from favorites" : "Added to favorites"
+        };
+      }
+
   
       case LOGOUT:
         return {
