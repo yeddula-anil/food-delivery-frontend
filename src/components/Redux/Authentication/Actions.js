@@ -15,9 +15,10 @@ export const registerUser = ({ userData, navigate }) => async (dispatch) => {
 
       dispatch({ type: "REGISTER_SUCCESS", payload: { message, jwt, role } });
 
-      dispatch(getUser(jwt)); 
-
-      navigate("/");
+      if(role==="ROLE_OWNER")
+          navigate("/admin");
+      else 
+          navigate("/")
     } else {
       dispatch({ type: "REGISTER_FAILURE", payload: message || "Signup failed" });
     }
@@ -45,9 +46,11 @@ export const loginUser = ({ loginData, navigate }) => async (dispatch) => {
       localStorage.setItem("jwt", jwt);
       dispatch({ type: "LOGIN_SUCCESS", payload: { jwt, role } });
 
-      dispatch(getUser(jwt)); // Optional
-      navigate("/");
-      console.log("user successfully fetched"); // Redirect after login
+      // dispatch(getUser(jwt)); // Optional
+      if(role===RESTAURANT_OWNER)
+          navigate("/admin");
+      else 
+          navigate("/")
     } else {
       dispatch({ type: "LOGIN_FAILURE", payload: message || "Login failed" });
     }
@@ -61,7 +64,7 @@ export const loginUser = ({ loginData, navigate }) => async (dispatch) => {
 };
 
 
-export const getUser = (jwtFromParam) => async (dispatch) => {
+export const getUser = (jwtFromParam,navigate) => async (dispatch) => {
   dispatch({ type: "GET_USER_REQUEST" });
 
   const jwt = jwtFromParam || localStorage.getItem("jwt"); // ✅ fallback to stored jwt
@@ -75,6 +78,12 @@ export const getUser = (jwtFromParam) => async (dispatch) => {
     console.log(data)
 
     dispatch({ type: "GET_USER_SUCCESS", payload: data });
+    if(data.role==="ROLE_OWNER"){
+      navigate("/admin")
+    }
+    else{
+      navigate("/")
+    }
   } catch (error) {
     dispatch({ type: "GET_USER_FAILURE", payload: error.message });
     console.error("User fetch error:", error);

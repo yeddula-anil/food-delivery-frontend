@@ -25,6 +25,7 @@ import { registerUser } from '../Redux/Authentication/Actions';
     const dispatch=useDispatch()
   
     const handleSubmit = (values) => {
+      console.log(values)
       dispatch(registerUser({userData:values,navigate}))
     };
   
@@ -73,7 +74,7 @@ import { registerUser } from '../Redux/Authentication/Actions';
                   onChange={(e) => setFieldValue('role', e.target.value)}
                 >
                   <MenuItem value={'ROLE_CUSTOMER'}>Customer</MenuItem>
-                  <MenuItem value={'ROLE_RESTAURANT_OWNER'}>Restaurant Owner</MenuItem>
+                  <MenuItem value={'ROLE_OWNER'}>Restaurant Owner</MenuItem>
                 </Select>
 
               </FormControl>

@@ -1,11 +1,14 @@
 import { Box, Button, Card, Divider, Grid, Modal, TextField } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CartItem from './CartItem';
 import AddressCard from './AddressCard';
 import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
 import { AddLocationAlt } from '@mui/icons-material';
 import * as Yup from "yup";
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { findCart } from '../Redux/Cart/Action';
+import { createOrder } from '../Redux/Orders/Action';
 const items=[1,1];
 const initialValues={
     streetAddress:"",
@@ -34,6 +37,8 @@ export const style = {
   };
   
 const Cart=()=>{
+    const {cart}=useSelector(store=>store)
+    const dispatch=useDispatch()
     const createOrderUsingSelectedAdrdress=()=>{
 
     }
@@ -44,15 +49,48 @@ const Cart=()=>{
     const handleClose = () =>{
          setOpen(false);
     }
-    const handleSubmit=(val)=>{
-        console.log("value",val);
+    const handleSubmit = (values) => {
+    const cartItems = cart.cartItems;
+
+    if (!cartItems || cartItems.length === 0) {
+        console.error("No items in cart");
+        return;
     }
+
+    const restaurantId = cartItems[0]?.food?.restaurant?.id;
+
+    if (!restaurantId) {
+        console.error("Restaurant ID is missing");
+        return;
+    }
+
+    const data = {
+        jwt: localStorage.getItem("jwt"),
+        order: {
+            restaurantId,
+            deliveryAdress: {
+                streetAdress: values.streetAddress, // ✅ correct field name
+                city: values.city,
+                stateProvince: values.state,
+                postalCode: values.pincode,
+                country: "india"
+            }
+        }
+    };
+
+    dispatch(createOrder(data));
+    console.log("Submitted data:", data);
+};
+
+    
+    
+    console.log("cart",cart)
     return(
         <div>
             <main className='lg:flex justify-between'>
                 <section className='lg:w-[30%] space-y-6 lg:min-h-screen pt-10'>
                     {
-                        items.map((item)=><CartItem />)
+                        cart.cartItems.map((item)=><CartItem item={item}/>)
                     }
                 <Divider />
                 <div className='billDetails px-5 text-sm'>
@@ -60,28 +98,28 @@ const Cart=()=>{
                     <div className='space-y-3'>
                         <div className='flex justify-between text-gray-400'>
                             <p>item total</p>
-                            <p>$1900</p>
+                            <p>₹{cart.cart?.total}</p>
 
                         </div>
                         <div className='flex justify-between text-gray-400'>
                             <p>Delivery fee</p>
-                            <p>$21</p>
+                            <p>₹30</p>
                             
                         </div>
                         <div className='flex justify-between text-gray-400'>
                             <p>PlatForm Fee</p>
-                            <p>$1</p>
+                            <p>₹5</p>
                             
                         </div>
                         <div className='flex justify-between text-gray-400'>
                             <p>GST & Restaurant charges</p>
-                            <p>$33</p>
+                            <p>$10</p>
                             
                         </div>
                         <Divider />
                         <div className='flex justify-between text-gray-400'>
                             <p>Total Pay</p>
-                            <p>$1955</p>
+                            <p>₹{cart.cart?.total+30+5+10}</p>
                             
                         </div>
                     </div>

@@ -1,7 +1,9 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { categorizeIngredients } from '../util/categorizeIngredients';
+import { useDispatch } from 'react-redux';
+import { addItemToCart } from '../Redux/Cart/Action';
 
 const ingredients=[
     {
@@ -14,8 +16,29 @@ const ingredients=[
     }
 ]
 const MenuCard=({item})=>{
-    const handleCheckboxChange=(item)=>{
-        console.log(item);
+    const [selectedIngredients,setSelectedIngredients]=useState([]);
+    const dispatch=useDispatch();
+    const handleCheckboxChange=(itemName)=>{
+      if(selectedIngredients.includes(itemName)){
+        setSelectedIngredients(selectedIngredients.filter((item)=>item!=itemName))
+      }
+      else{
+        setSelectedIngredients([...selectedIngredients,itemName])
+      }
+    }
+    const handleAddTocart=(e)=>{
+        e.preventDefault()
+        const reqData={
+            jwt:localStorage.getItem("jwt"),
+            cartItem:{
+                foodId:item.id,
+                quantity:1,
+                ingredients:selectedIngredients
+
+            }
+        }
+        dispatch(addItemToCart(reqData))
+        console.log("req data",reqData)
     }
     return(
         <div>
@@ -47,7 +70,7 @@ const MenuCard=({item})=>{
             {ingredients.map((ingredient) => (
                 <FormControlLabel
                     key={ingredient.id}
-                    control={<Checkbox onChange={() => handleCheckboxChange(ingredient)} />}
+                    control={<Checkbox onChange={() => handleCheckboxChange(ingredient.name)} />}
                     label={ingredient.name}
                 />
             ))}
@@ -61,7 +84,7 @@ const MenuCard=({item})=>{
 
                     </div>
                     <div className='pt-5'>
-                        <Button type="submit" variant="contained" disabled={false}>{true?"Add To Cart":"out of stock"}</Button>
+                        <Button onClick={handleAddTocart} type="submit" variant="contained" disabled={false}>{true?"Add To Cart":"out of stock"}</Button>
                     </div>
                    </form>
                 </AccordionDetails>

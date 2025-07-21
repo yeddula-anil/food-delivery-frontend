@@ -2,7 +2,7 @@ import { Avatar, Badge, IconButton } from '@mui/material';
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import './navbar.css'
+import './Navbar.css'
 import PersonIcon from '@mui/icons-material/Person';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';

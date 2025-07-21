@@ -34,17 +34,17 @@ const RestaurantDetails = () => {
         
             dispatch(getRestaurantById({ jwt, restaurantId: id }));
             dispatch(getRestaurantCategories({ jwt, restaurantId: id}))
-            dispatch(getMenuItemByRestaurantId({jwt,restaurantId:id,vegetarian:true,nonveg:false,seasonal:false,foodCategory:"Burgers"}))
+            
         
     }, [dispatch, jwt, id]);
     useEffect(()=>{
         dispatch(getMenuItemByRestaurantId({jwt,restaurantId:id,
-            vegetarian:true,
-            nonveg:false,
-            seasonal:false,
+            vegetarian:food_type==="vegetarian",
+            nonveg:food_type==="non_veg",
+            seasonal:food_type==="seasonal",
             foodCategory:foodCategory}))
 
-    },[foodCategory])
+    },[foodCategory,food_type])
     
     console.log("restuarants by id",restaurant)
     console.log("restaurant categories",categories)

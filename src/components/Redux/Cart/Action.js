@@ -3,15 +3,15 @@ import {
   FIND_CART_REQUEST,
   FIND_CART_SUCCESS,
   FIND_CART_FAILURE,
-   ADD_ITEM_TO_CART_REQUEST,
+  ADD_ITEM_TO_CART_REQUEST,
   ADD_ITEM_TO_CART_SUCCESS,
   ADD_ITEM_TO_CART_FAILURE,
-   UPDATE_CART_ITEM_REQUEST,
-  UPDATE_CART_ITEM_SUCCESS,
-  UPDATE_CART_ITEM_FAILURE,
-  REMOVE_CART_ITEM_REQUEST,
-  REMOVE_CART_ITEM_SUCCESS,
-  REMOVE_CART_ITEM_FAILURE,
+  UPDATE_CARTITEM_REQUEST,
+  UPDATE_CARTITEM_SUCCESS,
+  UPDATE_CARTITEM_FAILURE,
+  DELETE_CARTITEM_REQUEST,
+  DELETE_CARTITEM_SUCCESS,
+  DELETE_CARTITEM_FAILURE,
 } from './ActionTypes';
 
 export const findCart = (jwt) => async (dispatch) => {
@@ -25,6 +25,7 @@ export const findCart = (jwt) => async (dispatch) => {
     });
 
     dispatch({ type: FIND_CART_SUCCESS, payload: data });
+    console.log("cart fetched successfully",data);
   } catch (error) {
     dispatch({
       type: FIND_CART_FAILURE,
@@ -52,6 +53,7 @@ export const addItemToCart = (reqData) => async (dispatch) => {
       type: ADD_ITEM_TO_CART_SUCCESS,
       payload: data, // CartItem or full cart returned by backend
     });
+    console.log("added to cart successfully",data);
   } catch (error) {
     dispatch({
       type: ADD_ITEM_TO_CART_FAILURE,
@@ -62,7 +64,7 @@ export const addItemToCart = (reqData) => async (dispatch) => {
 
 //update cart item
 export const updateCartItem = (reqData) => async (dispatch) => {
-  dispatch({ type: UPDATE_CART_ITEM_REQUEST });
+  dispatch({ type: UPDATE_CARTITEM_REQUEST });
 
   try {
     const { data } = await api.put(
@@ -75,10 +77,10 @@ export const updateCartItem = (reqData) => async (dispatch) => {
       }
     );
 
-    dispatch({ type: UPDATE_CART_ITEM_SUCCESS, payload: data });
+    dispatch({ type: UPDATE_CARTITEM_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: UPDATE_CART_ITEM_FAILURE,
+      type: UPDATE_CARTITEM_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
   }
@@ -86,7 +88,7 @@ export const updateCartItem = (reqData) => async (dispatch) => {
 
 //delete cart item
 export const removeCartItem = (cartItemId, jwt) => async (dispatch) => {
-  dispatch({ type: REMOVE_CART_ITEM_REQUEST });
+  dispatch({ type: DELETE_CARTITEM_REQUEST });
 
   try {
     const { data } = await api.delete(
@@ -99,12 +101,12 @@ export const removeCartItem = (cartItemId, jwt) => async (dispatch) => {
     );
 
     dispatch({
-      type: REMOVE_CART_ITEM_SUCCESS,
+      type: DELETE_CARTITEM_SUCCESS,
       payload: cartItemId, 
     });
   } catch (error) {
     dispatch({
-      type: REMOVE_CART_ITEM_FAILURE,
+      type: DELETE_CARTITEM_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
   }

@@ -107,6 +107,7 @@ export const createRestaurant = (reqData) => async (dispatch) => {
     );
 
     dispatch({ type: CREATE_RESTAURANT_SUCCESS, payload: data });
+    console.log('resturant created successfully',data)
   } catch (error) {
     dispatch({
       type: CREATE_RESTAURANT_FAILURE,
