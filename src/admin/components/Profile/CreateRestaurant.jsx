@@ -8,11 +8,13 @@ import {
   IconButton,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { Formik, Form, Field } from "formik";
-import { createRestaurant } from "../../../components/Redux/Restaurant/Action";
+import { Formik, Form } from "formik";
 import { useDispatch } from "react-redux";
+import { createRestaurant } from "../../../components/Redux/Restaurant/Action";
 
 const CreateRestaurantForm = () => {
+  const dispatch = useDispatch();
+
   const initialValues = {
     name: "",
     description: "",
@@ -33,12 +35,11 @@ const CreateRestaurantForm = () => {
     },
     images: [""],
   };
-  const dispatch=useDispatch()
 
   const handleSubmit = (values) => {
     console.log(values);
-    const jwt=localStorage.getItem("jwt");
-    dispatch(createRestaurant({body:values,jwt:jwt}))
+    const jwt = localStorage.getItem("jwt");
+    dispatch(createRestaurant({ body: values, jwt: jwt }));
   };
 
   return (
@@ -57,7 +58,7 @@ const CreateRestaurantForm = () => {
       </Typography>
 
       <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-        {({ values, handleChange }) => (
+        {({ values, handleChange, setFieldValue }) => (
           <Form>
             <Grid container spacing={4}>
               {/* Left Column */}
@@ -69,6 +70,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Cuisine Type"
@@ -77,6 +79,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Description"
@@ -85,6 +88,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Opening Hours"
@@ -93,6 +97,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
               </Grid>
 
@@ -103,43 +108,48 @@ const CreateRestaurantForm = () => {
                 </Typography>
                 <TextField
                   label="Street"
-                  name="address.street"
+                  name="adress.street"
                   value={values.adress.street}
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="City"
-                  name="address.city"
+                  name="adress.city"
                   value={values.adress.city}
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="State"
-                  name="address.state"
+                  name="adress.stateProvince"
                   value={values.adress.stateProvince}
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="ZIP / PIN Code"
-                  name="address.zipCode"
+                  name="adress.postalCode"
                   value={values.adress.postalCode}
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Country"
-                  name="address.country"
+                  name="adress.country"
                   value={values.adress.country}
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
               </Grid>
 
@@ -155,6 +165,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Mobile Number"
@@ -163,6 +174,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Twitter"
@@ -171,6 +183,7 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
                 <TextField
                   label="Instagram"
@@ -179,23 +192,32 @@ const CreateRestaurantForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   margin="normal"
+                  fullWidth
                 />
 
-                <Box mt={2}>
+                {/* Image URLs Section */}
+                <Box mt={3}>
                   <Typography variant="subtitle1">Images</Typography>
-                  <Box display="flex" alignItems="center">
-                    <TextField
-                      label="Image URL 1"
-                      name="images[0]"
-                      value={values.images[0]}
-                      onChange={handleChange}
-                      variant="outlined"
-                      margin="normal"
-                    />
-                    <IconButton color="secondary">
-                      <AddIcon />
-                    </IconButton>
-                  </Box>
+                  {values.images.map((image, index) => (
+                    <Box key={index} display="flex" alignItems="center" mb={1}>
+                      <TextField
+                        label={`Image URL ${index + 1}`}
+                        name={`images[${index}]`}
+                        value={image}
+                        onChange={handleChange}
+                        variant="outlined"
+                        fullWidth
+                      />
+                    </Box>
+                  ))}
+                  <IconButton
+                    color="secondary"
+                    onClick={() => {
+                      setFieldValue("images", [...values.images, ""]);
+                    }}
+                  >
+                    <AddIcon />
+                  </IconButton>
                 </Box>
               </Grid>
             </Grid>

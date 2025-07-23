@@ -40,13 +40,13 @@ export const getIngredientCategories = ({ id,jwt }) => async (dispatch) => {
 };
 
 //create ingredients 
-export const createIngredient = ({ data, jwt }) => async (dispatch) => {
+export const createIngredients = (ingredients,jwt,foodId) => async (dispatch) => {
   dispatch({ type: CREATE_INGREDIENT_REQUEST });
 
   try {
     const response = await api.post(
-      '/api/admin/ingredients',
-      data,
+      `/api/admin/ingredients/${foodId}`,
+      ingredients,
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -55,11 +55,13 @@ export const createIngredient = ({ data, jwt }) => async (dispatch) => {
     );
 
     dispatch({ type: CREATE_INGREDIENT_SUCCESS, payload: response.data });
+    console.log("successfully added ingredients",response.data)
   } catch (error) {
     dispatch({
       type: CREATE_INGREDIENT_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
+    console.log("error while adding ingredients")
   }
 };
 

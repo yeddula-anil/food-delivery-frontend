@@ -19,22 +19,24 @@ import {
 
 import { api } from '../../config/api';
 //create menu item
-export const createMenuItem = ({menu, jwt}) => async (dispatch) => {
+export const createMenuItem = ({body, jwt}) => async (dispatch) => {
   dispatch({ type: CREATE_MENU_ITEMS_REQUEST });
 
   try {
-    const { data } = await api.post("/api/admin/food", menu, {
+    const { data } = await api.post("/api/admin/food", body, {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     });
 
     dispatch({ type: CREATE_MENU_ITEMS_SUCCESS, payload: data });
+    console.log("created food successfully",data)
   } catch (error) {
     dispatch({
       type: CREATE_MENU_ITEMS_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
+    console.log("error while creating food")
   }
 };
 
@@ -56,11 +58,13 @@ export const getMenuItemByRestaurantId = (reqData) => async (dispatch) => {
       type: GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS,
       payload: data,
     });
+    console.log("menu items fetched successfully",data)
   } catch (error) {
     dispatch({
       type: GET_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
+    console.log("error while fetching menu items")
   }
 };
 

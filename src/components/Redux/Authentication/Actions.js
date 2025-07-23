@@ -78,12 +78,7 @@ export const getUser = (jwtFromParam,navigate) => async (dispatch) => {
     console.log(data)
 
     dispatch({ type: "GET_USER_SUCCESS", payload: data });
-    if(data.role==="ROLE_OWNER"){
-      navigate("/admin")
-    }
-    else{
-      navigate("/")
-    }
+   
   } catch (error) {
     dispatch({ type: "GET_USER_FAILURE", payload: error.message });
     console.error("User fetch error:", error);

@@ -34,7 +34,7 @@ const Profile = () => {
           <Route path="orders" element={<Orders />} />
           <Route path="menu" element={<Menu />} />
           <Route path="restaurant" element={<CreateRestaurantForm />} />
-          <Route path="addmenu" element={<AddMenu />} />
+          <Route path="add-menu" element={<AddMenu />} />
           <Route path="category" element={<CreateCategory />} />
         </Routes>
       </Box>

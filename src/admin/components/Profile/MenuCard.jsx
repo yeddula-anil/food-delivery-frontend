@@ -14,13 +14,18 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from 'react-redux';
+import { createIngredients } from '../../../components/Redux/Ingredients/Action';
 
-const MenuCard = () => {
+const MenuCard = ({item}) => {
   const [categories, setCategories] = useState([]);
   const [openModal, setOpenModal] = useState(false);
 
   const [categoryName, setCategoryName] = useState('');
   const [ingredients, setIngredients] = useState(['']);
+  const dispatch=useDispatch()
+  const jwt=localStorage.getItem("jwt")
+  const foodId=item.id
 
   const handleOpenModal = () => {
     setCategoryName('');
@@ -54,6 +59,14 @@ const MenuCard = () => {
   };
 
   const handleSet = () => {
+      const formattedList = categories.flatMap((category) =>
+         category.ingredients.map((ingredient) => ({
+            name: ingredient,
+            category: category.name
+        }))
+      );
+      dispatch(createIngredients(formattedList,jwt,foodId))
+
     console.log('Final Ingredients:', categories);
   };
 
@@ -66,13 +79,13 @@ const MenuCard = () => {
             <div className="lg:flex items-center lg:gap-5">
               <img
                 className="w-[7rem] h-[7rem] object-cover"
-                src="/biryani.jpg"
+                src={item.images[0]}
                 alt="Food"
               />
               <div className="space-y-1 lg:space-y-5 lg:max-w-2xl">
-                <p className="font-semibold text-xl">Chicken Biryani</p>
-                <p>₹250</p>
-                <p className="text-gray-400">Spicy chicken biryani cooked with basmati rice and spices</p>
+                <p className="font-semibold text-xl">{item.name}</p>
+                <p>₹{item.price}</p>
+                <p className="text-gray-400">{item.description}</p>
               </div>
             </div>
           </div>

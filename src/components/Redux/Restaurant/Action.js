@@ -77,13 +77,14 @@ export const getRestaurantByUserId = (jwt) => async (dispatch) => {
   dispatch({ type: GET_RESTAURANT_BY_USER_ID_REQUEST });
 
   try {
-    const { data } = await api.get("/api/admin/restaurant", {
+    const { data } = await api.get("/api/admin/restaurant/user", {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
     });
 
     dispatch({ type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: data });
+    console.log("restaurant object",data)
   } catch (error) {
     dispatch({
       type: GET_RESTAURANT_BY_USER_ID_FAILURE,
@@ -208,26 +209,29 @@ export const createEvent = ({data, jwt, restaurantId}) => async (dispatch) => {
 //event actions not completed
 
 //category actions
-export const createCategory = ({reqData, jwt}) => async (dispatch) => {
+export const createCategory = ({category, jwt}) => async (dispatch) => {
   dispatch({ type: CREATE_CATEGORY_REQUEST });
 
   try {
     const { data } = await api.post(
       "/api/admin/category",
-      reqData,
+      {category},
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
+          
         },
       }
     );
 
     dispatch({ type: CREATE_CATEGORY_SUCCESS, payload: data });
+    console.log("category successfully created",data)
   } catch (error) {
     dispatch({
       type: CREATE_CATEGORY_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
+    console.log("error while adding category")
   }
 };
 
@@ -243,10 +247,12 @@ export const getRestaurantCategories = ({jwt,restaurantId}) => async (dispatch) 
     });
 
     dispatch({ type: GET_RESTAURANT_CATEGORY_SUCCESS, payload: data });
+    console.log("categories feched successfully",data);
   } catch (error) {
     dispatch({
       type: GET_RESTAURANT_CATEGORY_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
+    console.log("error while fetching categories")
   }
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import {
   Divider,
   Typography,
@@ -11,31 +11,70 @@ import {
 } from '@mui/material'
 import MenuCard from './MenuCard'
 import axios from 'axios'
+import { useDispatch,useSelector } from 'react-redux'
+import { createCategory, getRestaurantByUserId, getRestaurantCategories } from '../../../components/Redux/Restaurant/Action'
+import { getMenuItemByRestaurantId } from '../../../components/Redux/Menu/Action'
 
 const CreateCategory = () => {
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+
   const [foodType, setFoodType] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [categories, setCategories] = useState([
-    { id: 1, name: "biryani" },
-    { id: 2, name: "pizza" }
-  ]);
   const [newCategory, setNewCategory] = useState("");
   const [showInput, setShowInput] = useState(false);
+
+  const restaurant = useSelector((state) => state.restaurant.userRestaurant);
+  const categories = useSelector((state)=>state.restaurant.categories)
+  const menuItems=useSelector(state=>state.menu.menuItems)
+  console.log(categories,"categories");
+  const id = restaurant?.id;
+
+  // First, fetch the restaurant for the user
+  useEffect(() => {
+    dispatch(getRestaurantByUserId(jwt));
+  }, [dispatch, jwt]);
+
+  // Then, once restaurant is available, fetch categories
+  useEffect(() => {
+   if (id) {
+    // Fetch categories
+    dispatch(
+      getRestaurantCategories({
+        jwt,
+        restaurantId: id,
+      })
+    );
+
+    // Fetch menu items with filters
+    dispatch(
+      getMenuItemByRestaurantId({
+        restaurantId: id,
+        vegetarian: false,
+        seasonal: false,
+        nonveg: false,
+        foodCategory: "",
+        jwt,
+      })
+    );
+  }
+}, [id, jwt, dispatch]);
+
 
   const handleAddCategory = async () => {
     if (!newCategory.trim()) return;
 
-    try {
-      const res = await axios.post("/api/restaurant/category", {
-        name: newCategory
-      });
-      setCategories([...categories, res.data]); // add new category
-      setNewCategory("");
-      setShowInput(false);
-    } catch (error) {
-      console.error("Failed to add category", error);
+    await dispatch(createCategory({ category: newCategory, jwt }));
+
+  
+    if (id) {
+      dispatch(getRestaurantCategories({ jwt, restaurantId: id }));
     }
-  };
+
+    setNewCategory("");
+    setShowInput(false);
+};
+
 
   return (
     <div className='px-5 lg:px-20'>
@@ -99,7 +138,7 @@ const CreateCategory = () => {
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
                 >
-                  {categories.map((item) => (
+                  {Array.isArray(categories) && categories.map((item) => (
                     <FormControlLabel
                       key={item.id}
                       value={item.name}
@@ -115,7 +154,7 @@ const CreateCategory = () => {
 
         {/* Right Panel */}
         <div className='space-y-5 lg:w-[80%] lg:pl-10'>
-          {[1, 2, 3, 4].map((item, index) => (
+          { Array.isArray(menuItems) && menuItems.map((item, index) => (
             <MenuCard key={index} item={item} />
           ))}
         </div>

@@ -52,7 +52,8 @@ const restaurantReducer=(state=initialState,action)=>{
                 error:null,
                 loading:false,
                 restaurants:state.restaurants.filter((item)=>item.id!==action.payload),
-                userRestaurant:state.userRestaurant.filter((item)=>item.id!==action.payload)
+                userRestaurant:state.userRestaurant?.id === action.payload ? null : state.userRestaurant
+
             }
         case actionTypes.CREATE_CATEGORY_SUCCESS:
             return{
