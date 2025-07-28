@@ -110,11 +110,13 @@ export const updateMenuItemAvailability = ({foodId,jwt})=> async (dispatch) => {
       type: UPDATE_MENU_ITEMS_AVAILABILITY_SUCCESS,
       payload: data,
     });
+    console.log("meniItem availability updated successfully")
   } catch (error) {
     dispatch({
       type: UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE,
       payload: error.response?.data?.message || error.message,
     });
+    console.log("error while updating menu item availability")
   }
 };
 

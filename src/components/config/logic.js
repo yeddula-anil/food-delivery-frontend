@@ -1,9 +1,9 @@
 import { Restaurant } from "@mui/icons-material";
 
-export const isPresentInFavorites=(favorites,restaurant)=>{
+export const isPresentInFavorites=(favorites,restaurantId)=>{
     for(let item of favorites){
        
-        if(restaurant.id===item.RestaurantId){
+        if(item.restaurantId===restaurantId){
            
             return true;
         }

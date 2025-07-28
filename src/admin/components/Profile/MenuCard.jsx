@@ -9,16 +9,22 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  IconButton
+  IconButton,
+  FormGroup,
+  FormControlLabel,
+  Checkbox
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch } from 'react-redux';
 import { createIngredients } from '../../../components/Redux/Ingredients/Action';
+import { categorizeIngredients } from '../../../components/util/categorizeIngredients';
+
 
 const MenuCard = ({item}) => {
   const [categories, setCategories] = useState([]);
+  
   const [openModal, setOpenModal] = useState(false);
 
   const [categoryName, setCategoryName] = useState('');
@@ -99,16 +105,22 @@ const MenuCard = ({item}) => {
 
                 {/* Horizontal Scrollable Category List */}
                 <div className="mt-4 overflow-x-auto flex gap-6">
-                    {categories.map((cat, index) => (
-                    <div key={index} className="min-w-[200px]">
-                        <p className="font-semibold mb-2">{cat.name}</p>
-                        <div className="flex flex-col gap-2">
-                        {cat.ingredients.map((ing, i) => (
-                            <span key={i} className="text-gray-400">{ing}</span>
-                        ))}
-                        </div>
-                    </div>
-                    ))}
+                       {
+                          Object.entries(categorizeIngredients(item.ingredients)).map(([category, ingredients]) => (
+                                      <div key={category}>
+                                                <p className="font-semibold">{category}</p>
+                                                <FormGroup>
+                                                      {ingredients.map((ingredient) => (
+                                                           <FormControlLabel
+                                                                key={ingredient.id}
+                                                                control={<Checkbox onChange={() => handleCheckboxChange(ingredient)} />}
+                                                                label={ingredient}
+                                                           />
+                                                        ))}
+                                                </FormGroup>
+                                      </div>
+                          ))
+                        }
                 </div>
 
                 {/* Set Button */}

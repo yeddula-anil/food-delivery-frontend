@@ -31,6 +31,9 @@ import {
   GET_RESTAURANT_CATEGORY_REQUEST,
   GET_RESTAURANT_CATEGORY_SUCCESS,
   GET_RESTAURANT_CATEGORY_FAILURE,
+  SEARCH_RESTAURANT_REQUEST,
+  SEARCH_RESTAURANT_SUCCESS,
+  SEARCH_RESTAURANT_FAILURE,
 } from './ActionTypes';
 
 export const getAllRestaurants = (token) => async (dispatch) => {
@@ -161,13 +164,13 @@ export const deleteRestaurant = ({restaurantId, jwt}) => async (dispatch) => {
   }
 };
 
-export const updateRestaurantStatus = ({restaurantId, jwt}) => async (dispatch) => {
+export const updateRestaurantStatus = (jwt,restaurantId) => async (dispatch) => {
   dispatch({ type: UPDATE_RESTAURANT_STATUS_REQUEST });
 
   try {
     const { data } = await api.put(
       `/api/admin/restaurant/${restaurantId}/status`,
-      {}, // No body needed
+      null, // No body needed
       {
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -254,5 +257,29 @@ export const getRestaurantCategories = ({jwt,restaurantId}) => async (dispatch) 
       payload: error.response?.data?.message || error.message,
     });
     console.log("error while fetching categories")
+  }
+};
+
+export const searchRestaurants = (keyword, jwt) => async (dispatch) => {
+  try {
+    dispatch({ type: SEARCH_RESTAURANT_REQUEST });
+
+    const res = await api.get("api/restaurant/search", {
+      params: { keyword },
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    });
+
+    dispatch({
+      type: SEARCH_RESTAURANT_SUCCESS,
+      payload: res.data,
+    });
+    console.log("searched restaurants",res.data)
+  } catch (error) {
+    dispatch({
+      type: SEARCH_RESTAURANT_FAILURE,
+      payload: error.response?.data?.message || "Something went wrong",
+    });
   }
 };

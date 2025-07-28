@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../../components/Redux/Authentication/Actions';
 
 const menu = [
-  { title: "Dashboard", icon: <DashboardIcon />, path: "profile" },
+  { title: "Dashboard", icon: <DashboardIcon />, path: "" },
   { title: "Orders", icon: <ShoppingBagIcon />, path: "orders" },
   { title: "Menu", icon: <MenuIcon />, path: "menu" },
   { title: "Restaurant", icon: <AddBoxIcon />, path: "restaurant" },

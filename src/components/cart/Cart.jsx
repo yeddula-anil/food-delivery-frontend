@@ -43,6 +43,8 @@ const Cart=()=>{
 
     }
     const [open,setOpen]=useState(false);
+    const [orderSuccessModal, setOrderSuccessModal] = useState(false);
+
     const handleOpenAddressModal=()=>{
         setOpen(true);
     }
@@ -56,18 +58,10 @@ const Cart=()=>{
         console.error("No items in cart");
         return;
     }
-
-    const restaurantId = cartItems[0]?.food?.restaurant?.id;
-
-    if (!restaurantId) {
-        console.error("Restaurant ID is missing");
-        return;
-    }
-
     const data = {
         jwt: localStorage.getItem("jwt"),
         order: {
-            restaurantId,
+            
             deliveryAdress: {
                 streetAdress: values.streetAddress, // ✅ correct field name
                 city: values.city,
@@ -79,6 +73,10 @@ const Cart=()=>{
     };
 
     dispatch(createOrder(data));
+    setOpen(false);
+
+    // Show success modal
+    setOrderSuccessModal(true);
     console.log("Submitted data:", data);
 };
 
@@ -219,6 +217,33 @@ const Cart=()=>{
                     
                     
                 </Box>
+            </Modal>
+            <Modal
+            open={orderSuccessModal}
+            onClose={() => setOrderSuccessModal(false)}
+            aria-labelledby="order-success-title"
+            aria-describedby="order-success-description"
+            >
+            <Box sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    bgcolor: 'white', // 👈 white background
+                    boxShadow: 24,
+                    p: 4,
+                    borderRadius: 2,
+                    width: 300,
+                    textAlign: 'center',
+                    }}>
+                <h2 id="order-success-title" className='text-xl font-semibold mb-4'>Order Placed</h2>
+                <p id="order-success-description" className='text-gray-600 mb-6'>
+                Your order has been placed successfully!
+                </p>
+                <Button variant='contained' onClick={() => setOrderSuccessModal(false)}>
+                Close
+                </Button>
+            </Box>
             </Modal>
         </div>
     )

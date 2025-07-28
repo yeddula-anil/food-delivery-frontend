@@ -47,7 +47,7 @@ export const loginUser = ({ loginData, navigate }) => async (dispatch) => {
       dispatch({ type: "LOGIN_SUCCESS", payload: { jwt, role } });
 
       // dispatch(getUser(jwt)); // Optional
-      if(role===RESTAURANT_OWNER)
+      if(role==="RESTAURANT_OWNER")
           navigate("/admin");
       else 
           navigate("/")
@@ -64,10 +64,9 @@ export const loginUser = ({ loginData, navigate }) => async (dispatch) => {
 };
 
 
-export const getUser = (jwtFromParam,navigate) => async (dispatch) => {
+export const getUser = (jwt) => async (dispatch) => {
   dispatch({ type: "GET_USER_REQUEST" });
 
-  const jwt = jwtFromParam || localStorage.getItem("jwt"); // ✅ fallback to stored jwt
 
   try {
     const { data } = await api.get("/api/users/profile", {
@@ -106,10 +105,11 @@ export const addToFavorite = (jwt, restaurantId) => async (dispatch) => {
       );
   
       dispatch({ type: ADD_TO_FAVORITES_SUCCESS, payload: data });
+      console.log("successfully added to favorites");
       
     } catch (error) {
          dispatch({ type: ADD_TO_FAVORITES_FAILURE, payload: error});
-         console.log("error", error);
+         console.log("error while adding to favorites", error);
       
       
     }

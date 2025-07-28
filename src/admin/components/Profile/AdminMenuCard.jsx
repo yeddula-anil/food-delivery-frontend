@@ -1,9 +1,10 @@
 import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { categorizeIngredients } from '../util/categorizeIngredients';
+import { categorizeIngredients } from '../../../components/util/categorizeIngredients';
 import { useDispatch } from 'react-redux';
-import { addItemToCart } from '../Redux/Cart/Action';
+import { addItemToCart } from '../../../components/Redux/Cart/Action';
+import { updateMenuItemAvailability } from '../../../components/Redux/Menu/Action';
 
 const ingredients=[
     {
@@ -15,9 +16,11 @@ const ingredients=[
         ingredients:["Bacon Stripes","chicken"]
     }
 ]
-const MenuCard=({item})=>{
+const AdminMenuCard=({item})=>{
+    const [available,setAvailable]=useState(item.available);
     const [selectedIngredients,setSelectedIngredients]=useState([]);
     const dispatch=useDispatch();
+    const jwt=localStorage.getItem("jwt")
     const handleCheckboxChange=(itemName)=>{
       if(selectedIngredients.includes(itemName)){
         setSelectedIngredients(selectedIngredients.filter((item)=>item!=itemName))
@@ -26,22 +29,13 @@ const MenuCard=({item})=>{
         setSelectedIngredients([...selectedIngredients,itemName])
       }
     }
-    const handleAddTocart=(e)=>{
-        e.preventDefault()
-        const reqData={
-            jwt:localStorage.getItem("jwt"),
-            cartItem:{
-                foodId:item.id,
-                quantity:1,
-                ingredients:selectedIngredients
-
-            }
-        }
-        dispatch(addItemToCart(reqData))
-        console.log("req data",reqData)
+    const handleFoodAvailability=(e)=>{
+         e.preventDefault();
+         setAvailable(!available);
+        dispatch(updateMenuItemAvailability({foodId:item.id,jwt:jwt}))
     }
     return(
-        <div>
+        <div className='w-full'>
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -70,21 +64,18 @@ const MenuCard=({item})=>{
                                         {ingredients.map((ingredient) => (
                                             <FormControlLabel
                                                 key={ingredient.id}
-                                                control={<Checkbox onChange={() => handleCheckboxChange(ingredient.name)} />}
+                                                control={<Checkbox onChange={() => handleCheckboxChange(ingredient)} />}
                                                 label={ingredient}
                                             />
                                         ))}
                                     </FormGroup>
                                 </div>
-                          ))
-
-
-
+                            ))
                         }
 
                     </div>
                     <div className='pt-5'>
-                        <Button onClick={handleAddTocart} type="submit" variant="contained" disabled={false}>{true?"Add To Cart":"out of stock"}</Button>
+                        <Button onClick={handleFoodAvailability} type="submit" variant="contained" disabled={false}>{available?"make out of stock":"make available"}</Button>
                     </div>
                    </form>
                 </AccordionDetails>
@@ -92,4 +83,4 @@ const MenuCard=({item})=>{
         </div>
     )
 }
-export default MenuCard;
+export default AdminMenuCard;

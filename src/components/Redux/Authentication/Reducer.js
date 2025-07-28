@@ -70,7 +70,7 @@ const authReducer = (state = initialState, action) => {
         };
 
         case ADD_TO_FAVORITES_SUCCESS: {
-          const alreadyExists = isPresentInFavorites(state.favorites, action.payload);
+          const alreadyExists = isPresentInFavorites(state.favorites, action.payload?.restaurantId);
 
           const updatedFavorites = alreadyExists
           ? state.favorites.filter(

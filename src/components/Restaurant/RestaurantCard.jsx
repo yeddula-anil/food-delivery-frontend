@@ -1,5 +1,5 @@
 import { Card, Chip, Icon, IconButton, ListItem } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useNavigate } from 'react-router-dom';
@@ -11,10 +11,14 @@ const RestaurantCard=({res})=>{
         return null
     const navigate=useNavigate();
     const dispatch=useDispatch();
-    const jwt=localStorage.getItem("jwt")
     const favorites = useSelector((state) => state.auth.favorites || []);
+    const jwt=localStorage.getItem("jwt")
+    const isFavorite=isPresentInFavorites(favorites,res.id)
+    const [inFavorite,setInFavorite]=useState(isFavorite)
+    
     
     const handleAddToFavorite=()=>{
+        setInFavorite(!inFavorite)
         dispatch(addToFavorite(jwt,res.id))
     }
     const handleNavigateToRestaurant=()=>{
@@ -46,7 +50,7 @@ const RestaurantCard=({res})=>{
             </div>
             <div>
                 <IconButton onClick={handleAddToFavorite}>
-                    {isPresentInFavorites(favorites,res)?<FavoriteIcon />:<FavoriteBorderIcon />}
+                    {inFavorite?<FavoriteIcon />:<FavoriteBorderIcon />}
                 </IconButton>
             </div>
            

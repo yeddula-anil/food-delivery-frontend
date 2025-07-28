@@ -15,9 +15,9 @@ import { Formik, Form } from "formik";
 import { CircularProgress } from "@mui/material";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getMenuItemByRestaurantId } from "../../../components/Redux/Menu/Action";
-import MenuCard from '../../../components/Restaurant/MenuCard'
+import { getMenuItemByRestaurantId } from "../../../components/Redux/Menu/Action"
 import { getRestaurantByUserId } from "../../../components/Redux/Restaurant/Action";
+import AdminMenuCard from './AdminMenuCard'
 
 // const categoryOptions = ["VEG", "NON_VEG", "DESSERT", "DRINKS"];
 
@@ -62,7 +62,7 @@ const Menu = () => {
         <Grid container spacing={2}>
           {menuItems.map((item) => (
             <Grid item xs={12} sm={6} md={4} key={item.id}>
-              <MenuCard item={item} />
+              <AdminMenuCard item={item} />
             </Grid>
           ))}
         </Grid>

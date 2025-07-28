@@ -5,6 +5,7 @@ const initialState={
     restaurant:null,
     loading:false,
     error:null,
+    search:[],
     categories:[]
 
 }
@@ -17,8 +18,10 @@ const restaurantReducer=(state=initialState,action)=>{
         case actionTypes.GET_RESTAURANT_BY_ID_REQUEST:
         case actionTypes.CREATE_CATEGORY_REQUEST:
         case actionTypes.GET_RESTAURANT_CATEGORY_REQUEST:
+        case actionTypes.SEARCH_RESTAURANT_REQUEST:
             return{
-                ...state
+                ...state,
+                loading:true
             };
         case actionTypes.CREATE_RESTAURANT_SUCCESS:
             return{
@@ -67,12 +70,19 @@ const restaurantReducer=(state=initialState,action)=>{
                 loading:false,
                 categories:action.payload
             }
+        case actionTypes.SEARCH_RESTAURANT_SUCCESS:
+            return{
+                ...state,
+                loading:false,
+                search:[...action.payload]
+            }
         case actionTypes.CREATE_RESTAURANT_FAILURE:
         case actionTypes.GET_ALL_RESTAURANT_FAILURE:
         case actionTypes.UPDATE_RESTAURANT_FAILURE:
         case actionTypes.GET_RESTAURANT_BY_ID_FAILURE:
         case actionTypes.CREATE_CATEGORY_FAILURE:
         case actionTypes.GET_RESTAURANT_CATEGORY_FAILURE:
+        case actionTypes.SEARCH_RESTAURANT_FAILURE:
             return{
                 ...state,
                 loading:false,
