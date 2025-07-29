@@ -1,4 +1,5 @@
-import { ThemeProvider } from '@emotion/react';
+import { ThemeProvider } from '@mui/material/styles';
+
 import { CssBaseline } from '@mui/material';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';

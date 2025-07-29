@@ -9,11 +9,12 @@ import { useNavigate } from "react-router-dom";
 const Home=()=>{
     const jwt=localStorage.getItem("jwt");
     const dispatch=useDispatch();
+    const {restaurant}=useSelector(store=>store)
     const navigate=useNavigate()
     useEffect(()=>{
         dispatch(getAllRestaurants(jwt))
     },[])
-    const {restaurant}=useSelector(store=>store)
+    
     const user=useSelector(store=>store.auth?.user)
    
     
@@ -40,7 +41,7 @@ const Home=()=>{
             </section>
             <div className="flex flex-wrap items-center justify-around gap-5">
                 {
-                    restaurant.restaurants.map((res)=><RestaurantCard res={res}/>)
+                   Array.isArray(restaurant?.restaurants) && restaurant.restaurants?.map((res)=><RestaurantCard res={res}/>)
                 }
             </div>
 
