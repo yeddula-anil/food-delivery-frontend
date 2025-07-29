@@ -22,9 +22,9 @@ const RestaurantCard=({res})=>{
         dispatch(addToFavorite(jwt,res.id))
     }
     const handleNavigateToRestaurant=()=>{
-        // if(res.open){
+        if(res.open){
             navigate(`restaurant/${res.name}/${res.id}`)
-        // }
+        }
     }
     return(
         <Card className='w-[18rem] justify-between'>

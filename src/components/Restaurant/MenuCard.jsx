@@ -1,9 +1,11 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Button, Checkbox, FormControlLabel, FormGroup, Typography,Snackbar } from '@mui/material';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { categorizeIngredients } from '../util/categorizeIngredients';
 import { useDispatch } from 'react-redux';
 import { addItemToCart } from '../Redux/Cart/Action';
+import MuiAlert from '@mui/material/Alert';
+
 
 const ingredients=[
     {
@@ -18,6 +20,7 @@ const ingredients=[
 const MenuCard=({item})=>{
     const [selectedIngredients,setSelectedIngredients]=useState([]);
     const dispatch=useDispatch();
+    const [openSnackbar, setOpenSnackbar] = useState(false);
     const handleCheckboxChange=(itemName)=>{
       if(selectedIngredients.includes(itemName)){
         setSelectedIngredients(selectedIngredients.filter((item)=>item!=itemName))
@@ -38,6 +41,7 @@ const MenuCard=({item})=>{
             }
         }
         dispatch(addItemToCart(reqData))
+        setOpenSnackbar(true);
         console.log("req data",reqData)
     }
     return(
@@ -89,6 +93,16 @@ const MenuCard=({item})=>{
                    </form>
                 </AccordionDetails>
             </Accordion>
+            <Snackbar 
+                open={openSnackbar} 
+                autoHideDuration={3000} 
+                onClose={() => setOpenSnackbar(false)}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+            >
+                <MuiAlert onClose={() => setOpenSnackbar(false)} severity="success" variant="filled">
+                Added to Cart Successfully!
+                </MuiAlert>
+            </Snackbar>
         </div>
     )
 }

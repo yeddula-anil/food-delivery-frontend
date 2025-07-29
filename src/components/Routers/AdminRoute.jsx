@@ -4,7 +4,7 @@ import Profile from '../../admin/components/Profile/Profile';
 const AdminRoute = () => {
   return (
     <Routes>
-      <Route path="/*" element={<Profile />} />
+      <Route path="/my-profile/*" element={<Profile />} />
     </Routes>
   );
 };

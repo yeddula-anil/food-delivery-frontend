@@ -8,6 +8,8 @@ import AddMenu from './AddMenu';
 import CreateCategory from './CreateCategory';
 import Dashboard from './Dashboard';
 import { Box } from '@mui/material';
+// import ProfileNavigation from './ProfileNavigation';
+import UserProfile from '../../../components/Profile/UserProfile';
 
 const Profile = () => {
   return (
@@ -30,7 +32,8 @@ const Profile = () => {
       {/* Main content (80%) */}
       <Box sx={{ width: '80%', padding: 2 }}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<UserProfile />} />
+          <Route path="dashboard" element={<Dashboard />} />
           <Route path="orders" element={<Orders />} />
           <Route path="menu" element={<Menu />} />
           <Route path="restaurant" element={<CreateRestaurantForm />} />

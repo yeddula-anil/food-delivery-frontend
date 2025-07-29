@@ -14,6 +14,8 @@ const Home=()=>{
         dispatch(getAllRestaurants(jwt))
     },[])
     const {restaurant}=useSelector(store=>store)
+    const user=useSelector(store=>store.auth?.user)
+   
     
    
 

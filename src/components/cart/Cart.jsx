@@ -44,6 +44,7 @@ const Cart=()=>{
     }
     const [open,setOpen]=useState(false);
     const [orderSuccessModal, setOrderSuccessModal] = useState(false);
+    const [total,setTotal]=useState(cart.cart?.total)
 
     const handleOpenAddressModal=()=>{
         setOpen(true);
@@ -88,7 +89,7 @@ const Cart=()=>{
             <main className='lg:flex justify-between'>
                 <section className='lg:w-[30%] space-y-6 lg:min-h-screen pt-10'>
                     {
-                        cart.cartItems.map((item)=><CartItem item={item}/>)
+                        cart.cartItems.map((item)=><CartItem item={item} fn={setTotal}/>)
                     }
                 <Divider />
                 <div className='billDetails px-5 text-sm'>
@@ -229,7 +230,7 @@ const Cart=()=>{
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    bgcolor: 'white', // 👈 white background
+                    bgcolor: 'white',
                     boxShadow: 24,
                     p: 4,
                     borderRadius: 2,

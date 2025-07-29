@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { findCart, removeCartItem, updateCartItem } from '../Redux/Cart/Action';
 
-    const CartItem = ({ item }) => {
+    const CartItem = ({ item,fn }) => {
     const { cart } = useSelector(store => store);
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -20,6 +20,7 @@ import { findCart, removeCartItem, updateCartItem } from '../Redux/Cart/Action';
 
         if (value === -1 && item.quantity === 1) {
             handleRemoveCartItem(item.id, jwt);
+            
             return;
         }
 
@@ -28,6 +29,7 @@ import { findCart, removeCartItem, updateCartItem } from '../Redux/Cart/Action';
         try {
             await dispatch(updateCartItem({ data, jwt }));
             dispatch(findCart(jwt));
+             fn(prev => prev - item.totalPrice);
         } catch (err) {
             console.error("Error updating cart item:", err);
         }
@@ -52,12 +54,13 @@ import { findCart, removeCartItem, updateCartItem } from '../Redux/Cart/Action';
                                 <RemoveCircleOutlineIcon />
                             </IconButton>
                             <div className='w-5 h-5 text-xs flex items-center justify-center'>{item.quantity}</div>
+                            <p>{item.totalPrice}</p>
                             <IconButton onClick={() => handleUpdatecartItem(1)}>
                                 <AddCircleOutlineIcon />
                             </IconButton>
                         </div>
                     </div>
-                    <p>{item.totalPrice}</p>
+                    
                 </div>
                 <Button varaiant="contained" onClick={handleRemoveCartItem}>delete</Button>
             </div>

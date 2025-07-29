@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { logoutUser } from '../../../components/Redux/Authentication/Actions';
 
 const menu = [
-  { title: "Dashboard", icon: <DashboardIcon />, path: "" },
+  { title: "Dashboard", icon: <DashboardIcon />, path: "dashboard" },
   { title: "Orders", icon: <ShoppingBagIcon />, path: "orders" },
   { title: "Menu", icon: <MenuIcon />, path: "menu" },
   { title: "Restaurant", icon: <AddBoxIcon />, path: "restaurant" },
@@ -30,31 +30,54 @@ const ProfileNavigation = ({ open, handleClose }) => {
       dispatch(logoutUser());
       navigate('/');
     } else {
-      navigate(`/admin/${item.path}`);
+      navigate(`/admin/my-profile/${item.path}`);
     }
+     if(isSmallScreen){
+        handleClose
+     }
   };
+ 
 
   return (
     <div>
-      <Drawer
-        variant={isSmallScreen ? "temporary" : "permanent"}
-        onClose={handleClose}
-        open={isSmallScreen ? open : true}
-        anchor="left"
-        sx={{ zIndex: -1, position: 'sticky' }}
-      >
-        <div className='w-[50vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl gap-6 pt-16'>
-          {menu.map((item, i) => (
-            <React.Fragment key={item.title}>
-              <div onClick={() => handleNavigate(item)} className='px-5 flex items-center space-x-5 cursor-pointer'>
-                {item.icon}
-                <span>{item.title}</span>
-              </div>
-              {i !== menu.length - 1 && <Divider />}
-            </React.Fragment>
-          ))}
-        </div>
-      </Drawer>
+       <Drawer
+            
+            variant={isSmallScreen ? "temporary" : "permanent"}
+            onClose={handleClose}
+            open={isSmallScreen ? open : true}
+            anchor="left"
+            sx={{
+              '& .MuiDrawer-paper': {
+                top: '64px',
+                height: 'calc(100% - 64px)',
+                width: isSmallScreen ? '45vw' : '20vw',  // 👈 smaller for mobile
+                maxWidth: isSmallScreen ? 200 : 300,     // cap the size
+                backgroundColor: 'transparent',              // dark background
+                color: 'white',
+                padding: '1rem',
+                boxShadow: 'none !important',          // 🔑 remove white box shadow
+                backdropFilter: 'none !important'
+              },
+              
+            }}
+          >
+            <div className="h-full flex flex-col gap-4">
+              {menu.map((item, i) => (
+                <div
+                  key={i}
+                  onClick={() => handleNavigate(item)}
+                  className="flex items-center space-x-4 p-3 rounded-lg cursor-pointer transition-colors duration-200 hover:bg-gray-700"
+                  style={{
+                    backgroundColor: '#374151', // gray-700 for card effect
+                  }}
+                >
+                  {item.icon}
+                  <span>{item.title}</span>
+                </div>
+              ))}
+            </div>
+          </Drawer>
+      
     </div>
   );
 };

@@ -4,28 +4,35 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getUserOrders } from '../Redux/Orders/Action'
 
 const Orders = () => {
-  const dispatch=useDispatch()
-  const jwt=localStorage.getItem("jwt")
-  const orders=useSelector(store=>store.order.orders)
-  console.log("orders fetched successfuly",orders)
-  useEffect(()=>{
+  const dispatch = useDispatch()
+  const jwt = localStorage.getItem("jwt")
+  const orders = useSelector(store => store.order.orders)
+
+  useEffect(() => {
     dispatch(getUserOrders(jwt))
-  },[dispatch,jwt])
+  }, [dispatch, jwt])
+
   return (
-    <div className='flex items-center flex-col'>
-        <h1 className='text-xl text-center py-7 font-semibold'>My Orders</h1>
-        <div className='space-y-5 w-full lg:w-1/2'>
-         {
-          orders?.flatMap((order) =>
-            order.items.map((item, index) => (
-              <OrderCard key={`${order.id}-${index}`} item={item} status={order.orderStatus}/>
-            ))
-          )
-        }
+    <div className="w-full max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+      {/* Heading */}
+      <h1 className="text-xl sm:text-2xl font-semibold text-center mt-0 sm:mt-6">
+        My Orders
+      </h1>
 
-
-        </div>
-     
+      {/* Orders list */}
+      <div className="space-y-5 w-full mt-4 sm:mt-6">
+        {orders && orders.length > 0 ? (
+          orders.map((order) => (
+            <OrderCard 
+              key={order.id} 
+              item={order} 
+              status={order.orderStatus} 
+            />
+          ))
+        ) : (
+          <p className="text-gray-500 text-center">No orders found</p>
+        )}
+      </div>
     </div>
   )
 }

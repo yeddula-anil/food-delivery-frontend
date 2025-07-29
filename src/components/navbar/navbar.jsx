@@ -1,13 +1,18 @@
-import { Avatar, Badge, IconButton } from '@mui/material';
 import React, { useState, useEffect, useRef } from 'react';
+import { Avatar, Badge, IconButton } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import PersonIcon from '@mui/icons-material/Person';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchRestaurants } from '../../components/Redux/Restaurant/Action'; 
-import ArrowOutwardIcon from '@mui/icons-material/ArrowOutward';
+import { searchRestaurants } from '../../components/Redux/Restaurant/Action';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import ProfileNavigation from '../Profile/ProfileNavigation';
+import AdminProfileNavigation from '../../admin/components/Profile/ProfileNavigation'
+
 import './navbar.css';
 
 export const Navbar = () => {
@@ -16,6 +21,9 @@ export const Navbar = () => {
   const { auth, cart } = useSelector((store) => store);
   const results = useSelector((store) => store.restaurant?.search || []);
   const loading=useSelector(store=>store.restaurant.loading)
+  const [customer,setCustomer]=useState(true)
+  const isSmallScreen = useMediaQuery('(max-width:900px)');
+  const [drawerOpen,setDrawerOpen]=useState(false)
 
 
   const [showSearch, setShowSearch] = useState(false);
@@ -24,8 +32,12 @@ export const Navbar = () => {
   const debounceTimer = useRef(null);
 
   const handleAvatarClick = () => {
-    if (auth.user?.role === 'ROLE_CUSTOMER') {
-      navigate('/my-profile');
+    if (auth.user?.role === 'ROLE_OWNER') {
+      setCustomer(false)
+      navigate('/admin/my-profile');
+    }
+    else{
+      navigate("/my-profile")
     }
   };
 
@@ -54,14 +66,28 @@ export const Navbar = () => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+   const onMenuClick = () => {
+    
+    setDrawerOpen(true);
+
+    
+  };
 
   return (
     <div className='px-5 sticky top-0 z-[50] py-[.8rem] bg-[#e91e63] lg:px-20 flex items-center justify-between'>
       {/* Left - Logo */}
-      <div className='lg:mr-10 cursor-pointer flex items-center space-x-4'>
-        <li onClick={() => navigate("/")} className='logo font-semibold text-gray-300 text-2xl'>
+       <div className="flex items-center gap-4">
+        {isSmallScreen && (
+          <IconButton onClick={onMenuClick}>
+            <MenuIcon sx={{ fontSize: "1.8rem", color: "black" }} />
+          </IconButton>
+        )}
+        <span
+          onClick={() => navigate("/")}
+          className="logo font-semibold text-gray-800 text-xl cursor-pointer"
+        >
           Vikas Foods
-        </li>
+        </span>
       </div>
 
       {/* Center - Search Field */}
@@ -145,12 +171,25 @@ export const Navbar = () => {
         </div>
 
         {/* Cart */}
-        <IconButton onClick={() => navigate('/cart')}>
+        {customer && <IconButton onClick={() => navigate('/cart')}>
           <Badge color='primary' badgeContent={cart?.items?.length || 0}>
             <ShoppingCartIcon sx={{ fontSize: "1.5rem", color: "white" }} />
           </Badge>
-        </IconButton>
+        </IconButton>}
       </div>
+      {drawerOpen && (
+          auth.user?.role === "ROLE_OWNER" ? (
+            <AdminProfileNavigation 
+              open={drawerOpen} 
+              handleClose={() => setDrawerOpen(false)} 
+            />
+          ) : (
+            <ProfileNavigation 
+              open={drawerOpen} 
+              handleClose={() => setDrawerOpen(false)} 
+            />
+          )
+        )}
     </div>
   );
 };
