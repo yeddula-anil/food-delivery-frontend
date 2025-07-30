@@ -32,13 +32,17 @@ const Home=()=>{
                 </div>
 
             </section>
-            <section className="p-10 lg:py-10 lg:px-20">
-                <p className="text-2xl font-semibold text-gray-400 py-3 pb-10">Top Meals</p>
+            <section className="px-5 pt-6 pb-4 lg:py-10 lg:px-20">
+                <p className="text-2xl font-semibold text-gray-400 py-3">Top Meals</p>
                 <MultiItemCarousel />
             </section>
-            <section className='px-5 lg:px-20 pt-10'>
-                <h1 className="text-2xl font-semibold text-gray-400 py-3">Order from our handpicked favourites</h1>
+
+            <section className="px-5 lg:px-20 pt-1 lg:pt-10">
+                <h1 className="text-2xl font-semibold text-gray-400 py-3">
+                    Order from our handpicked favourites
+                </h1>
             </section>
+
             <div className="flex flex-wrap items-center justify-around gap-5">
                 {
                    Array.isArray(restaurant?.restaurants) && restaurant.restaurants?.map((res)=><RestaurantCard res={res}/>)
