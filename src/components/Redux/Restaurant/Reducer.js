@@ -74,7 +74,7 @@ const restaurantReducer=(state=initialState,action)=>{
             return{
                 ...state,
                 loading:false,
-                search:[...action.payload]
+                 search: Array.isArray(action.payload) ? action.payload : []
             }
         case actionTypes.CREATE_RESTAURANT_FAILURE:
         case actionTypes.GET_ALL_RESTAURANT_FAILURE:
